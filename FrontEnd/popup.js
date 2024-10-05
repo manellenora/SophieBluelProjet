@@ -29,7 +29,11 @@ function afficherModale() {
     boutonFermer.addEventListener("click", function () {
         fondPopup.remove();
     });
-
+    fondPopup.addEventListener("click", function (e) {
+        if (e.target.classList.contains("fondPopup")) {
+            fondPopup.remove();
+        }
+    });
 
     fondPopup.append(popup);
 
@@ -106,23 +110,38 @@ function ouvrirFormulaireAjoutProjet() {
             </div>
             <div class="form-group">
                 <label for="categorie">Catégorie</label>
-                <select id="categorie" name="categoryId" required>
-                    <option value="">Sélectionnez une catégorie</option>
-                    <option value="1">Objets</option>
-                    <option value="2">Appartements</option>
-                    <option value="3">Hôtels et Restaurants</option>
+                <select id="categorie" name="category" required>
+                    <option value="">Sélectionnez une catégorie</option> 
                 </select>
             </div>
             <button type="submit" class="btnValider">Valider</button>
         </form>
     `;
 
+    const select = popup.querySelector("select");
+    toutesLesCategories.forEach(function (categorie) {
+        const option = document.createElement("option");
+        option.value = categorie.id;
+        option.innerText = categorie.name;
+        select.append(option);
+    });
+
     fondPopup.append(popup);
+
+    const inputFile = popup.querySelector("#fileInput");
+    inputFile.addEventListener("change", function() {
+        //Virer contenu de zonePhoto et afficher la photo à la place
+    });
 
     // Fermer la popup en cliquant sur "X"
     const boutonFermer = popup.querySelector(".boutonFermerPopup");
     boutonFermer.addEventListener("click", function() {
         fondPopup.remove();
+    });
+    fondPopup.addEventListener("click", function (e) {
+        if (e.target.classList.contains("fondPopup")) {
+            fondPopup.remove();
+        }
     });
 
     // Gestion de l'envoi du formulaire
@@ -147,7 +166,13 @@ function envoyerProjet() {
     .then(response => {
         if (response.ok) {
             console.log("Projet ajouté avec succès !");
-            location.reload(); // Recharger la page pour voir le nouveau projet
+            response.json().then(function (projet) {
+                tousLesProjets.push(projet);
+                afficherProjets(tousLesProjets);
+                document.querySelectorAll(".fondPopup").forEach(function (element) {
+                    element.remove();
+                });
+            });
         } else {
             // Afficher plus de détails sur l'erreur
             response.json().then(data => {
@@ -164,7 +189,7 @@ function envoyerProjet() {
 
 
 function supprimerProjet(projet, projetElement) {
-    fetch("http://localhost:5678/api/works/${projetElement.id}", {
+    fetch(`http://localhost:5678/api/works/${projet.id}`, {
         method: "DELETE",
         headers: {
             "Authorization": "Bearer " + sessionStorage.getItem("authToken")
@@ -174,6 +199,10 @@ function supprimerProjet(projet, projetElement) {
 .then(response => {
     if (response.ok) {
         projetElement.remove(); 
+        tousLesProjets = tousLesProjets.filter(function (p) {
+            return p.id !== projet.id;
+        });
+        afficherProjets(tousLesProjets);
         console.log(`Projet avec l'ID ${projetElement.id} supprimé.`);
     } else {
         console.error('Erreur lors de la suppression du projet');
@@ -184,3 +213,5 @@ function supprimerProjet(projet, projetElement) {
 
 
 const boutonAjouterProjet = fetch("http://localhost:5678/api/works");
+
+

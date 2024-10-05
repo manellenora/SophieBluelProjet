@@ -1,5 +1,5 @@
 let tousLesProjets = null;
-
+let toutesLesCategories = null;
 
 const promesseFetchProjet = fetch("http://localhost:5678/api/works");
 //.then permet de dire à la promesse quel code exécuter une fois la réponse reçue
@@ -81,6 +81,7 @@ promesseFetchCategories.then(function (response) {
     //On utilise à nouveau .then sur cette nouvelle promesse.
     promiseJson.then(function (categories) {
         creerBoutonsFiltres(categories);
+        toutesLesCategories = categories;
         //On obtient finalement la liste des projets, un tableau contenant les objets décrivant les projets.
         //On peut appeler la fonction "afficherProjets" en lui fournissant la liste des projets.
 
