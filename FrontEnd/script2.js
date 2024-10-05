@@ -57,22 +57,12 @@ function clickBoutonSubmit(e) {
     });
 }
 
-    //Vérifier la réponse
-    //Si tout va bien on enregistre le jeton de connexion dans le sessionStorage, puis on redirige vers index.html
-    //Sinon on affiche l'erreur
-
-//Je dois vérifier si l'utilisateur est connecté
-//J'essaye de récupérer "authToken" dans sessionStorage
+    
 const token = sessionStorage.getItem("authToken");
 console.log("Token", token);
 if (token) {
-//Si je l'ai -> Je suis connecté
-    //Je vais adapter ma page
-    //Créer le bandeau "mode édition"
-    //Ajouter le bouton "Modifier"
-    //Cacher les boutons filtres
+
     document.body.classList.add("connecte");
 } else {
-//Sinon -> Je ne suis pas connecté
-    //je ne suis pas connecté, je m'arrête ici
+
 }

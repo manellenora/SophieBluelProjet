@@ -4,68 +4,68 @@ let tousLesProjets = null;
 const promesseFetchProjet = fetch("http://localhost:5678/api/works");
 //.then permet de dire à la promesse quel code exécuter une fois la réponse reçue
 promesseFetchProjet.then(function (response) {
-//On obtient l'objet Response fourni par la promesse
-//Pour obtenir les données finales, on doit appeler la fonction "json" de l'objet Response,
-//qui nous donne une nouvelle promesse.
-const promiseJson = response.json();
-//On utilise à nouveau .then sur cette nouvelle promesse.
-promiseJson.then(function (projets) {
-//On obtient finalement la liste des projets, un tableau contenant les objets décrivant les projets.
-//On peut appeler la fonction "afficherProjets" en lui fournissant la liste des projets.
-tousLesProjets = projets;
-afficherProjets(projets);
-//Dans le .then qui récupère le tableau de projets, juste avant la ligne "afficherProjets(projets)" :
+    //On obtient l'objet Response fourni par la promesse
+    //Pour obtenir les données finales, on doit appeler la fonction "json" de l'objet Response,
+    //qui nous donne une nouvelle promesse.
+    const promiseJson = response.json();
+    //On utilise à nouveau .then sur cette nouvelle promesse.
+    promiseJson.then(function (projets) {
+        //On obtient finalement la liste des projets, un tableau contenant les objets décrivant les projets.
+        //On peut appeler la fonction "afficherProjets" en lui fournissant la liste des projets.
+        tousLesProjets = projets;
+        afficherProjets(projets);
+        //Dans le .then qui récupère le tableau de projets, juste avant la ligne "afficherProjets(projets)" :
 
-});
+    });
 });
 
 
 
 
 function afficherProjets(projets) {
-//On affiche les projets dans la console pour voir à quoi ressemble les données
-console.log("Fonction afficherProjets");
-console.log(projets);
+    //On affiche les projets dans la console pour voir à quoi ressemble les données
+    console.log("Fonction afficherProjets");
+    console.log(projets);
 
 
 
 
-const gallery = document.querySelector(".gallery");
-gallery.innerHTML = "";
+    const gallery = document.querySelector(".gallery");
+    gallery.innerHTML = "";
 
 
 
 
-projets.forEach(projet => {
+    projets.forEach(projet => {
 
 
 
 
-const figure = document.createElement("figure");
+        const figure = document.createElement("figure");
 
 
 
 
-const img = document.createElement("img");
-img.src = projet.imageUrl;
+        const img = document.createElement("img");
+        img.src = projet.imageUrl;
 
 
 
 
-const figcaption = document.createElement("figcaption");
-figcaption.innerText = projet.title;
+        const figcaption = document.createElement("figcaption");
+        figcaption.innerText = projet.title;
 
 
 
 
-figure.append(img);
-figure.append(figcaption);
-gallery.append(figure);
+        figure.append(img);
+        figure.append(figcaption);
+        gallery.append(figure);
 
 
 
 
-});
+    });
 }
 
 
@@ -74,18 +74,18 @@ gallery.append(figure);
 const promesseFetchCategories = fetch("http://localhost:5678/api/categories");
 //.then permet de dire à la promesse quel code exécuter une fois la réponse reçue
 promesseFetchCategories.then(function (response) {
-//On obtient l'objet Response fourni par la promesse
-//Pour obtenir les données finales, on doit appeler la fonction "json" de l'objet Response,
-//qui nous donne une nouvelle promesse.
-const promiseJson = response.json();
-//On utilise à nouveau .then sur cette nouvelle promesse.
-promiseJson.then(function (categories) {
-creerBoutonsFiltres(categories);
-//On obtient finalement la liste des projets, un tableau contenant les objets décrivant les projets.
-//On peut appeler la fonction "afficherProjets" en lui fournissant la liste des projets.
+    //On obtient l'objet Response fourni par la promesse
+    //Pour obtenir les données finales, on doit appeler la fonction "json" de l'objet Response,
+    //qui nous donne une nouvelle promesse.
+    const promiseJson = response.json();
+    //On utilise à nouveau .then sur cette nouvelle promesse.
+    promiseJson.then(function (categories) {
+        creerBoutonsFiltres(categories);
+        //On obtient finalement la liste des projets, un tableau contenant les objets décrivant les projets.
+        //On peut appeler la fonction "afficherProjets" en lui fournissant la liste des projets.
 
 
-});
+    });
 });
 
 
@@ -100,49 +100,21 @@ function creerBoutonsFiltres(categories) {
 
         div.addEventListener("click", function () {
             // Appeler la fonction pour filtrer les projets par catégorie
-            const projetsFiltres = tousLesProjets.filter(function(projet) {
+            const projetsFiltres = tousLesProjets.filter(function (projet) {
                 return projet.category.name === categorie.name;
-                
 
-               });
-               afficherProjets(projetsFiltres);
+
+            });
+            afficherProjets(projetsFiltres);
         });
 
         divfiltres.append(div);
     });
 
-    const boutonTous = document.querySelector(".filtre"); // Sélection du bouton par son id
+    const boutonTous = document.querySelector(".filtre"); 
     boutonTous.addEventListener("click", function () {
-        afficherProjets(tousLesProjets); // Afficher tous les projets
+        afficherProjets(tousLesProjets); 
     });
 }
 
-
-
-
-//début login.html 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Étapes suivantes :
-//On récupère l'élément "div.gallery" dans le html, en utilisant document.querySelector
-//On va boucler sur le tableau projets pour appliquer un traitement sur chaque projet à l'intérieur
-//Pour boucler, on utilise for ou forEach
-//Dans la boucle :
-//On récupère un objet "projet" décrivant le projet
-//On créé un élément "figure" avec document.createElement
-//On créé un élément "img" et on lui donne comme source (src) la valeur de projet.imageUrl
-//On créé un élément "figcaption" et on lui donne comme contenu (avec "innerText") le nom du projet (projet.title)
-//En utilisant la fonction "append", on ajoute img dans figure, figcaption dans figure, puis figure dans gallery
 
