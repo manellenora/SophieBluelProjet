@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     //Écouter l'évènement click sur le bouton Se connecter
     const bouton = document.querySelector("#submit");
     bouton.addEventListener("click", clickBoutonSubmit);
@@ -19,7 +19,7 @@ function clickBoutonSubmit(e) {
         console.error("Email ou password absent");
         return;
     }
-    
+
     //Envoyer les données au serveur
     const promesseFetch = fetch("http://localhost:5678/api/users/login", {
         method: "POST",
@@ -30,39 +30,27 @@ function clickBoutonSubmit(e) {
             email,
             password,
         })
-      
+
     });
 
     promesseFetch
-    .then(function(response) {
-        if (!response.ok) {
-            throw new Error("Erreur lors de la connexion");
-        }
-        return response.json();
-    })
-    .then(function(data) {
-        // Si tout va bien, on enregistre le jeton de connexion dans le sessionStorage
-        if (data.token) {
-            sessionStorage.setItem("authToken", data.token);
-            // Puis on redirige vers index.html
-            window.location.href = "index.html";
-        } else {
-            throw new Error("Jeton de connexion non trouvé");
-        }
-    })
-    .catch(function(error) {
-        // Sinon on affiche l'erreur
-        console.error("Erreur :", error);
-        alert("Erreur de connexion : " + error.message);
-    });
-}
-
-    
-const token = sessionStorage.getItem("authToken");
-console.log("Token", token);
-if (token) {
-
-    document.body.classList.add("connecte");
-} else {
-
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error("E-mail ou mot de passe incorrect.");
+            }
+            return response.json();
+        })
+        .then(function (data) {
+            if (data.token) {
+                sessionStorage.setItem("authToken", data.token);
+                // Puis on redirige vers index.html
+                window.location.href = "index.html";
+            } else {
+                throw new Error("Jeton de connexion non trouvé");
+            }
+        })
+        .catch(function (error) {
+            console.error("Erreur :", error);
+            alert("Erreur de connexion : " + error.message);
+        });
 }

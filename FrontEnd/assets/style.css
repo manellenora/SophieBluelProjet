@@ -314,12 +314,11 @@ footer nav ul {
 	padding-right: 20px;
 }
 
-.filtre:hover {
-
+.filtre:hover,
+.filtre.selection {
 	background-color: #1D6154;
 	color: white;
 	cursor: default;
-
 }
 
 .connexion input {
@@ -389,7 +388,7 @@ footer nav ul {
 	padding: 1rem;
 	margin-left: -15%;
 	margin-right: -15%;
-   
+
 
 }
 
@@ -404,11 +403,11 @@ footer nav ul {
 	font-size: 1.1rem;
 	margin-left: 0.5rem;
 	color: black;
-	font-size: 16px; 
-    background-color: transparent; 
-    border: none;
-    cursor: pointer; 
-    margin-left: 13px;
+	font-size: 16px;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	margin-left: 13px;
 	font-size: 12px;
 }
 
@@ -436,16 +435,88 @@ body.connecte .filtres {
 	left: 0;
 }
 
-.popup {
-	height: 50%;
+.popup,
+.popupForm {
 	width: 50%;
 	background-color: white;
 	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+}
 
+.boutonsPopup {
+	display: flex;
+	justify-content: space-between;
+	margin: 1.5rem;
+}
+
+.boutonRetourPopup {
+	font-size: 1.1rem;
+	cursor: pointer;
 }
 
 .boutonFermerPopup {
-	margin: 1rem;
+	font-size: 1.1rem;
+	cursor: pointer;
+	margin-left: auto;
+}
+
+.titrePopup {
+	text-align: center;
+	margin-bottom: 2rem;
+	font-size: 1.5rem;
+}
+
+.zonePhoto label {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #E8F1F6;
+	width: 22rem;
+	margin: auto;
+	padding: 0rem 1rem;
+	gap: 0.5rem;
+	margin-bottom: 2rem;
+}
+
+.zonePhoto i {
+	margin: auto;
+	margin-top: 1rem;
+	font-size: 4rem;
+	color: #B9C5CC;
+}
+
+.zonePhoto span {
+	background-color: #B9C5CC;
+	border-radius: 10000px;
+	padding: 0.5rem 2rem;
+	margin: auto;
+	color: #306685;
+}
+
+.zonePhoto p {
+	margin: auto;
+	margin-bottom: 1rem;
+	font-size: 0.7rem;
+}
+
+.zonePhoto img {
+	max-width: 10rem;
+}
+
+.zonePhoto img~* {
+	display: none;
+}
+
+.form-group {
+	width: 24rem;
+	margin: auto;
+}
+
+.popupForm .separateurPopup {
+	width: 24rem;
+	margin-top: 1.5rem;
+	margin-bottom: 2rem;
 }
 
 .galleryPopup img {
@@ -454,12 +525,20 @@ body.connecte .filtres {
 }
 
 .galleryPopup {
-
-	display: flex;
 	display: grid;
-  grid-template-columns:repeat(5, 1fr); 
- justify-items: center;
-gap: 10px; 
+	grid-template-columns: repeat(5, 1fr);
+	justify-items: center;
+	width: 22rem;
+	margin: auto;
+	row-gap: 20px;
+}
+
+.separateurPopup {
+	width: 22rem;
+	margin: auto;
+	height: 1px;
+	background-color: #B3B3B3;
+	margin-top: 4rem;
 }
 
 .projet-item {
@@ -481,20 +560,16 @@ gap: 10px;
 
 }
 
-.popupForm {
-
-	height: 50%;
-	width: 50%;
-	background-color: white;
-
-
-}
-
 .headerProjets {
-
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	margin-top: 7rem;
+	margin-bottom: 2rem;
+}
+
+body.connecte .headerProjets {
+	margin-bottom: 3rem;
 }
 
 .headerProjets h2 {
@@ -504,28 +579,28 @@ gap: 10px;
 }
 
 .boutonModifier {
-    font-size: 16px; 
-    background-color: transparent; 
-    border: none; 
-    cursor: pointer; 
-    margin-left: 13px;
-	font-family: 'Poppins' ;
+	font-size: 16px;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	margin-left: 13px;
+	font-family: 'Poppins';
 	font-size: 12px;
 	margin-bottom: 20px;
 }
 
-.ajouterPhotoBtn {
-
-  font-family: 'Syne';
-  font-weight: 700;
-  color: white;
-  background-color: #1D6154;
-  margin: 2em auto;
-  width: 180px;
-  text-align: center;
-  border-radius: 60px;
-  border: none;
-  
+.ajouterPhotoBtn,
+.popupForm .btnValider {
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin: 2em auto;
+	text-align: center;
+	border-radius: 60px;
+	border: none;
+	padding: 0.75rem 3rem;
+	margin-bottom: 2.5rem;
 }
 
 
@@ -533,32 +608,47 @@ gap: 10px;
 .popupForm h2 {
 
 	text-align: center;
-  font-size: 28px;
-  margin-bottom: 20px;
+	font-size: 28px;
+	margin-bottom: 20px;
 }
 
-input, select {
+.popupForm input,
+.popupForm select {
+
 	width: 100%;
 	padding: 10px;
+	box-sizing: border-box;
 	margin: 10px 0 20px 0;
-	border: 1px solid #E0E0E0;
+	border: none;
 	border-radius: 5px;
 	font-size: 16px;
-	background-color: #FAFAFA #FAFAFA;
+	background-color: #FAFAFA;
+	box-shadow: 0px 4px 14px 0px #00000017;
+}
+
+.popupForm form {
+	display: flex;
+	flex-direction: column;
 }
 
 .popupForm .btnValider {
-
-	display: flex;
-	justify-content: center;
-	width: 50%;
-	padding: 12px;
+	pointer-events: none;
 	background-color: #C4C4C4;
-	border: none;
-	border-radius: 5px;
-	color: white;
-	font-size: 16px;
-	cursor: pointer;
-	margin-top: 20px;
-  
+}
+
+.popupForm .btnValider.actif {
+	pointer-events: all;
+	background-color: #1D6154;
+}
+
+.logoutBtn {
+	display: none;
+}
+
+body.connecte .logoutBtn {
+	display: inline;
+}
+
+body.connecte .loginBtn {
+	display: none;
 }

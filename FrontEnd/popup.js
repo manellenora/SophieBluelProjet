@@ -1,13 +1,4 @@
 
-const token = sessionStorage.getItem("authToken")
-console.log("Token stocké :", token);
-
-if (token) {
-    document.body.classList.add("connecte");
-    const boutonModifier = document.querySelector(".boutonModifier");
-    boutonModifier.addEventListener("click", afficherModale);
-}
-
 function afficherModale() {
     // Création du fond de la popup
     const fondPopup = document.createElement("div");
@@ -17,8 +8,12 @@ function afficherModale() {
     const popup = document.createElement("div");
     popup.classList.add("popup");
     popup.innerHTML = `
-        <div class="boutonFermerPopup">X</div>
+        <div class="boutonsPopup">
+            <div class="boutonFermerPopup"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="titrePopup">Galerie photo</div>
         <div class="galleryPopup"></div>
+        <div class="separateurPopup"></div>
     `;
 
     fondPopup.append(popup);
@@ -36,6 +31,17 @@ function afficherModale() {
     });
 
     fondPopup.append(popup);
+
+    const boutonAjouter = document.createElement("button");
+    boutonAjouter.innerText = "Ajouter une photo";
+    boutonAjouter.classList.add("ajouterPhotoBtn");
+
+    // Ajout du bouton à la galerie
+    popup.append(boutonAjouter);
+
+    boutonAjouter.addEventListener("click", function () {
+        ouvrirFormulaireAjoutProjet(); // Fonction qui ouvrira le formulaire d'ajout
+    });
 
     if (tousLesProjets) {
         afficherProjetsDansPopup(tousLesProjets);
@@ -59,27 +65,16 @@ function afficherProjetsDansPopup(projets) {
         `;
         galleryPopup.append(projetElement);
         const boutonSupprimer = projetElement.querySelector(".supprimerProjet");
-        boutonSupprimer.addEventListener("click", function() { 
-        supprimerProjet(projet, projetElement)
+        boutonSupprimer.addEventListener("click", function () {
+            supprimerProjet(projet, projetElement)
         })
 
-    });
-    const boutonAjouter = document.createElement("button");
-    boutonAjouter.innerText = "Ajouter une photo";
-    boutonAjouter.classList.add("ajouterPhotoBtn");
-
-    // Ajout du bouton à la galerie
-    galleryPopup.append(boutonAjouter);
-
-    // Gestionnaire d'événement pour ouvrir une modale d'ajout
-    boutonAjouter.addEventListener("click", function() {
-        ouvrirFormulaireAjoutProjet(); // Fonction qui ouvrira le formulaire d'ajout
     });
 }
 
 // Fonction pour ouvrir la modale/formulaire d'ajout de projet
 function ouvrirFormulaireAjoutProjet() {
-    // Ici tu peux créer et afficher un formulaire pour ajouter un projet
+   
     console.log("Ouverture du formulaire pour ajouter un projet.");
 }
 
@@ -93,16 +88,19 @@ function ouvrirFormulaireAjoutProjet() {
     const popup = document.createElement("div");
     popup.classList.add("popupForm");
     popup.innerHTML = `
-        <div class="boutonFermerPopup">X</div>
-        <h2>Ajout photo</h2>
+        <div class="boutonsPopup">
+            <div class="boutonRetourPopup"><i class="fa-solid fa-arrow-left"></i></div>
+            <div class="boutonFermerPopup"><i class="fa-solid fa-xmark"></i></div>
+        </div>
+        <div class="titrePopup">Ajout photo</div>
         <form id="formAjoutProjet" enctype="multipart/form-data">
             <div class="zonePhoto">
                 <label for="fileInput" class="labelAjoutPhoto">
-                    <img src="path/to/your/image-icon.png" alt="Ajouter photo" />
+                    <i class="fa-regular fa-image"></i>
                     <span>+ Ajouter photo</span>
+                    <input type="file" id="fileInput" name="image" accept="image/jpeg, image/png" style="display: none;" />
+                    <p>jpg, png : 4mo max</p>
                 </label>
-                <input type="file" id="fileInput" name="image" accept="image/jpeg, image/png" style="display: none;" />
-                <p>jpg, png : 4mo max</p>
             </div>
             <div class="form-group">
                 <label for="titre">Titre</label>
@@ -114,10 +112,12 @@ function ouvrirFormulaireAjoutProjet() {
                     <option value="">Sélectionnez une catégorie</option> 
                 </select>
             </div>
+            <div class="separateurPopup"></div>
             <button type="submit" class="btnValider">Valider</button>
         </form>
     `;
 
+    const inputText = popup.querySelector("#titre");
     const select = popup.querySelector("select");
     toutesLesCategories.forEach(function (categorie) {
         const option = document.createElement("option");
@@ -129,14 +129,25 @@ function ouvrirFormulaireAjoutProjet() {
     fondPopup.append(popup);
 
     const inputFile = popup.querySelector("#fileInput");
-    inputFile.addEventListener("change", function() {
+    inputFile.addEventListener("change", function () {
         //Virer contenu de zonePhoto et afficher la photo à la place
+        const fichier = inputFile.files[0];
+        const lien = URL.createObjectURL(fichier);
+        const img = document.createElement("img");
+        img.src = lien;
+        popup.querySelector(".labelAjoutPhoto").prepend(img);
     });
 
+    const boutonRetour = popup.querySelector(".boutonRetourPopup");
+    boutonRetour.addEventListener("click", function () {
+        fondPopup.remove();
+    });
     // Fermer la popup en cliquant sur "X"
     const boutonFermer = popup.querySelector(".boutonFermerPopup");
-    boutonFermer.addEventListener("click", function() {
-        fondPopup.remove();
+    boutonFermer.addEventListener("click", function () {
+        document.querySelectorAll(".fondPopup").forEach(element => {
+            element.remove();
+        });
     });
     fondPopup.addEventListener("click", function (e) {
         if (e.target.classList.contains("fondPopup")) {
@@ -144,9 +155,22 @@ function ouvrirFormulaireAjoutProjet() {
         }
     });
 
+    //Gestion affichage bouton
+    const btnValider = popup.querySelector(".btnValider");
+    const onChangeInputs = () => {
+        const formComplet =
+            inputFile.files[0] != null &&
+            inputText.value != "" &&
+            select.value != "";
+        btnValider.classList.toggle("actif", formComplet);
+    };
+    inputFile.addEventListener("change", onChangeInputs);
+    inputText.addEventListener("change", onChangeInputs);
+    select.addEventListener("change", onChangeInputs);
+
     // Gestion de l'envoi du formulaire
     const formAjoutProjet = document.getElementById("formAjoutProjet");
-    formAjoutProjet.addEventListener("submit", function(event) {
+    formAjoutProjet.addEventListener("submit", function (event) {
         event.preventDefault();
         envoyerProjet(); // Fonction qui gère l'envoi du formulaire au back-end
     });
@@ -163,26 +187,26 @@ function envoyerProjet() {
         },
         body: formData
     })
-    .then(response => {
-        if (response.ok) {
-            console.log("Projet ajouté avec succès !");
-            response.json().then(function (projet) {
-                tousLesProjets.push(projet);
-                afficherProjets(tousLesProjets);
-                document.querySelectorAll(".fondPopup").forEach(function (element) {
-                    element.remove();
+        .then(response => {
+            if (response.ok) {
+                console.log("Projet ajouté avec succès !");
+                response.json().then(function (projet) {
+                    tousLesProjets.push(projet);
+                    afficherProjets(tousLesProjets);
+                    document.querySelectorAll(".fondPopup").forEach(function (element) {
+                        element.remove();
+                    });
                 });
-            });
-        } else {
-            // Afficher plus de détails sur l'erreur
-            response.json().then(data => {
-                console.error("Erreur lors de l'ajout du projet:", data);
-            });
-        }
-    })
-    .catch(error => {
-        console.error("Erreur:", error);
-    });
+            } else {
+                // Afficher plus de détails sur l'erreur
+                response.json().then(data => {
+                    console.error("Erreur lors de l'ajout du projet:", data);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Erreur:", error);
+        });
 }
 
 
@@ -196,22 +220,20 @@ function supprimerProjet(projet, projetElement) {
         }
     })
 
-.then(response => {
-    if (response.ok) {
-        projetElement.remove(); 
-        tousLesProjets = tousLesProjets.filter(function (p) {
-            return p.id !== projet.id;
-        });
-        afficherProjets(tousLesProjets);
-        console.log(`Projet avec l'ID ${projetElement.id} supprimé.`);
-    } else {
-        console.error('Erreur lors de la suppression du projet');
-    }
-})
-.catch(error => console.error('Erreur:', error));
+        .then(response => {
+            if (response.ok) {
+                projetElement.remove();
+                tousLesProjets = tousLesProjets.filter(function (p) {
+                    return p.id !== projet.id;
+                });
+                afficherProjets(tousLesProjets);
+                console.log(`Projet avec l'ID ${projetElement.id} supprimé.`);
+            } else {
+                console.error('Erreur lors de la suppression du projet');
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
 }
 
-
-const boutonAjouterProjet = fetch("http://localhost:5678/api/works");
 
 
